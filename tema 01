@@ -1,0 +1,144 @@
+loja-ofertao/
+├── assets/
+│   ├── styles.css
+│   ├── script.js
+├── config/
+│   └── settings_schema.json
+├── layout/
+│   └── theme.liquid
+├── sections/
+│   └── featured-deals.liquid
+├── snippets/
+│   └── product-card.liquid
+├── templates/
+│   └── index.liquid
+│   └── product.liquid
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} - {{ shop.name }}</title>
+    <link rel="stylesheet" href="{{ 'styles.css' | asset_url }}">
+</head>
+<body>
+    <header class="header">
+        <h1>{{ shop.name }}</h1>
+        <p>Grandes ofertas, sempre!</p>
+    </header>
+
+    <nav class="navbar">
+        <a href="/">Início</a>
+        <a href="/collections/all">Todos os Produtos</a>
+        <a href="/cart">Carrinho</a>
+    </nav>
+
+    <main>
+        {{ content_for_layout }}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; {{ shop.name }} - Aproveite nossas promoções!</p>
+    </footer>
+
+    <script src="{{ 'script.js' | asset_url }}"></script>
+</body>
+</html>
+<div class="featured-deals">
+    <h2>Ofertas Imperdíveis</h2>
+    <div class="product-grid">
+        {% for product in collections.featured.products %}
+            {% include 'product-card' with product %}
+        {% endfor %}
+    </div>
+</div>
+<div class="product-card">
+    <a href="{{ product.url }}">
+        <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+    </a>
+    <h3>{{ product.title }}</h3>
+    <p>
+        <span class="original-price">{{ product.compare_at_price | money }}</span>
+        <span class="sale-price">{{ product.price | money }}</span>
+    </p>
+    <button class="btn-add-to-cart" data-product-id="{{ product.id }}">Adicionar ao Carrinho</button>
+</div>
+{% section 'featured-deals' %}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.header {
+    text-align: center;
+    background-color: #ff5733;
+    color: white;
+    padding: 20px 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    padding: 10px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+.featured-deals {
+    padding: 20px;
+    text-align: center;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.sale-price {
+    color: #ff5733;
+    font-weight: bold;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 10px;
+}
+document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        alert('Produto adicionado ao carrinho!');
+    });
+});
+[
+    {
+        "name": "Featured Deals",
+        "settings": [
+            {
+                "type": "collection",
+                "id": "featured",
+                "label": "Coleção de Destaque"
+            }
+        ]
+    }
+]
